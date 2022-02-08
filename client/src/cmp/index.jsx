@@ -50,7 +50,34 @@ export class IndexClients extends Component {
       });
   }
 
+  filterFunction() {
+    // Declare variables
+    var input, filter, div, card, cardBody, tr, cardTitle, i, txtValue;
+    input = document.getElementById("myInput");
+    filter = input.value.toUpperCase();
+    //console.log("filter: ", filter)
+    div = document.getElementById("myDiv");
+    card = div.getElementsByClassName("card");
+    //console.log("cards : ", card);
+    //console.log("div : ", div);
 
+    for (i = 0; i < card.length; i++) {
+      //console.log("this is the card: ", card[i])
+      cardBody = card[i].getElementsByClassName("card-body");
+      //console.log("this is the card body: ", cardBody)
+
+      cardTitle = card[i].getElementsByClassName("card-title");
+      //console.log("this is the card title: ", cardTitle);
+      if (cardTitle) {
+        txtValue = cardTitle[0].textContent || cardTitle.innerText;
+        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+          card[i].style.display = "";
+        } else {
+          card[i].style.display = "none";
+        }
+      }
+    }
+  }
 
   render() {
     const { clients } = this.state;
@@ -59,15 +86,16 @@ export class IndexClients extends Component {
       <div dir="auto">
         <Button variant="secondary" onClick={this.goBack}>Go Back</Button>
         <h1 className="title">Welcome To Humanz Client's List</h1>
+        <input autoComplete="off" className="searchInput" type="text" id="myInput" onKeyUp={this.filterFunction} placeholder="Search for names.."></input>
 
-        <div dir="rtl" className="container">
+        <div dir="rtl" className="container" id="myDiv">
 
           {clients.map((client) => (
 
-            <Card key={client._id} style={{ width: '18rem' }}>
+            <Card id={client._id} key={client._id} style={{ width: '18rem' }}>
               <Button className="deleteBtn" variant="danger" onClick={() => this.deleteClient(client._id)}>X</Button>
+              <Card.Title>{client.fullName}</Card.Title>
               <Card.Body dir="ltr">
-                <Card.Title>{client.fullName}</Card.Title>
                 <Card.Text> ID: {client.clientId}</Card.Text>
                 <Card.Text>Phone Number: {client.phoneNumber}</Card.Text>
                 <Card.Text>IP Adress : {client.ipAdress}</Card.Text>
@@ -77,15 +105,6 @@ export class IndexClients extends Component {
             </Card>
 
           ))}
-
-          {/*<div dir="rtl" className="preview" key={client._id}>
-              <p>שם לקוח: {client.fullName}</p>
-              <p>תעודת זהות: {client.clientId}</p>
-              <p>IP כתובת : {client.ipAdress}</p>
-              <p>מספר טלפון: {client.phoneNumber}</p>
-              <button onClick={() => this.deleteClient(client._id)}>מחק</button>
-
-            </div>*/}
 
         </div>
 
